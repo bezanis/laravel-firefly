@@ -7,6 +7,13 @@
         </div>
 
         <div class="flex space-x-2">
+            @can ('reply', $post->discussion)
+            <button @click="quote({{$post->id}})" data-tippy-content="{{ __('Quote') }}">
+                <span class="sr-only">{{ __('Quote') }}</span>
+                <svg viewBox="0 0 16 16" class="w-5 h-5 text-gray-700 hover:text-gray-500"><rect class="ql-fill ql-stroke" height="3" width="3" x="4" y="5"></rect> <rect class="ql-fill ql-stroke" height="3" width="3" x="11" y="5"></rect> <path class="ql-even ql-fill ql-stroke" d="M7,8c0,4.031-3,5-3,5"></path> <path class="ql-even ql-fill ql-stroke" d="M14,8c0,4.031-3,5-3,5"></path> </svg>
+            </button>
+            @endcan
+
             @if (\Firefly\Features::enabled('correct_posts'))
                 @if ($post->is_correct)
                     @can ('unmark', $post)
