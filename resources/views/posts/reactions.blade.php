@@ -2,7 +2,7 @@
      x-on:keydown.escape.prevent.stop="close($refs.button)"
      x-on:focusin.window="! $refs.panel.contains($event.target) && close()"
      x-id="['dropdown-button-{{$post->id}}']"
-     class="absolute mt-2 mb-4"
+     class="mt-2 relative"
 >
     <button class="inline-flex items-center rounded-full bg-gray-100 px-3 py-0.5 text-sm font-medium text-gray-800"
             data-tippy-content="React to this Post"
@@ -35,7 +35,7 @@
     </div>
     <template x-for="reaction in reactions" :key="reaction.reaction">
         <button class="inline-flex items-center rounded-full bg-gray-100 px-3 py-0.5 text-sm font-medium text-gray-800" x-on:click="sendReaction(reaction.reaction)">
-            <span x-text="reaction.reaction"></span>
+            <span x-html="reaction.reaction"></span>
             <span x-show="reaction.count > 1" class="rounded-full bg-black text-white ml-2 py-0.5 px-2 text-xs" x-text="reaction.count"></span>
         </button>
     </template>
