@@ -31,7 +31,7 @@
     @endif
 </div>
 
-<div class="space-y-5">
+<div class="space-y-5" x-data="Discussion()">
     <x-search :search="$search" />
 
     @if (! $posts->count())
@@ -66,5 +66,35 @@
         </form>
     </x-card>
     <x-quill-js />
+    <script>
+        function Discussion() {
+            return {
+                posts: {!! json_encode($posts->keyBy('id')) !!},
+                rich: {{ \Firefly\Features::enabled('wysiwyg') ? 'true' : 'false' }},
+                quote(postId) {
+                    if (!this.posts.hasOwnProperty(postId)) {
+                        return;
+                    }
+
+                    if (!this.rich) {
+                        var content = ""
+                        var lines = this.posts[postId].content.split(/\n/);
+                        for (var i = 0; i < lines.length; i++ ) {
+                            content += "> " + lines[i] + "\n";
+                        }
+
+                        document.getElementById('content').value = content;
+
+                        return
+                    }
+
+                    if (this.rich) {
+                        html = '<blockquote>'+this.posts[postId].content+'</blockquote><br>';
+                        editor.clipboard.dangerouslyPasteHTML(0, html);
+                    }
+                }
+            }
+        }
+    </script>
 @endcan
 @endsection
