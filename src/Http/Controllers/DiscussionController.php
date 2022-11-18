@@ -69,9 +69,36 @@ class DiscussionController extends Controller
     public function show(Discussion $discussion, Request $request)
     {
         $posts = $discussion->posts()
+            ->with('reactions', 'reactions.user')
             ->withSearch($request->get('search'))
             ->when(Features::enabled('correct_posts'), fn ($query) => $query->orderBy('is_initial_post', 'desc')->orderBy('corrected_at', 'desc')->orderBy('created_at', 'asc'))
             ->paginate(config('firefly.pagination.posts'));
+
+        if (Features::enabled('reactions')) {
+            $postsWithGroupedReactions = $posts->getCollection()
+                ->map(function ($post) {
+                    $groupedReactions = $post->reactions->groupBy('reaction')
+                        ->map(function ($reactionGroup, $reaction) {
+                            $users = $reactionGroup
+                                ->sortByDesc(fn ($reactionGroup) => $reactionGroup->user->id == auth()->id() ? 1 : 0)
+                                ->map(fn ($reactionGroup) => $reactionGroup->user->id == auth()->id() ? __('You') : $reactionGroup->user->{config('firefly.name')})
+                                ->implode(', ');
+
+                            return [
+                                'reaction' => $reaction,
+                                'count'    => $reactionGroup->count(),
+                                'users'    => $users,
+                            ];
+                        })
+                        ->values();
+
+                    $post->groupedReactions = $groupedReactions;
+
+                    return $post;
+                });
+
+            $posts->setCollection($postsWithGroupedReactions);
+        }
 
         return view('firefly::discussions.show')
             ->withDiscussion($discussion)
