@@ -1,6 +1,6 @@
 <div
     x-data="ReactionsToPost{{ $post->id }}()"
-    x-init="initReactions({{ \Firefly\Models\Reaction::convertReactions($post->groupedReactions()) }})"
+    x-init="initReactions({{ \Firefly\Models\Reaction::convertReactions((isset($post->groupedReactions)?$post->groupedReactions:$post->groupedReactions())) }})"
     x-on:keydown.escape.prevent.stop="close($refs.button)"
     x-on:focusin.window="! $refs.panel.contains($event.target) && close()"
     x-id="['dropdown-button-{{ $post->id }}']"

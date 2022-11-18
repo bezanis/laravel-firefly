@@ -80,7 +80,7 @@ class Post extends Model
 
     public function groupedReactions(): Collection
     {
-        return $this
+        $groupedReactions = $this
             ->hasMany(Reaction::class)
             ->with('user')
             ->get()
@@ -98,5 +98,9 @@ class Post extends Model
                 ];
             })
             ->values();
+
+        $this->groupedReactions = $groupedReactions;
+
+        return $groupedReactions;
     }
 }
