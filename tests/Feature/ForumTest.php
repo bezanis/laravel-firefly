@@ -127,7 +127,7 @@ class ForumTest extends TestCase
         $discussion2 = Discussion::create([
             'user_id'  => $this->getUser()->id,
             'title'    => 'Second Discussion',
-            'created_at'    => Carbon::now()->subtract('4 days')
+            'created_at'    => Carbon::now()->subtract('4 days'),
         ]);
 
         $post2 = Post::create([

@@ -26,7 +26,7 @@ class ForumController extends Controller
                 $join->on('posts.discussion_id', '=', 'discussions.id');
                 $join->whereNull('posts.deleted_at');
             })
-            ->select(['discussions.*',DB::raw('max(posts.created_at) as last_post_at')])
+            ->select(['discussions.*', DB::raw('max(posts.created_at) as last_post_at')])
             ->groupBy('discussions.id')
             ->orderBy('last_post_at', 'desc')
             ->orderBy('discussions.created_at', 'desc')
