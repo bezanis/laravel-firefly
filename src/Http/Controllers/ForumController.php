@@ -22,7 +22,7 @@ class ForumController extends Controller
             ->withIsBeingWatched($request->user())
             ->withIsAnswered()
             ->withSearch($request->get('search'))
-            ->leftJoin('posts', function($join) {
+            ->leftJoin('posts', function ($join) {
                 $join->on('posts.discussion_id', '=', 'discussions.id');
                 $join->whereNull('posts.deleted_at');
             })
