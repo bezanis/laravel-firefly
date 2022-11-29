@@ -155,7 +155,5 @@ class ForumTest extends TestCase
 
         $this->assertEquals(2, $discussions->count());
         $this->assertEquals('First Discussion', $discussions->first()->title);
-
-
     }
 }
